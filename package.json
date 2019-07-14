@@ -1,0 +1,34 @@
+{
+  "name": "petcare-server",
+  "version": "1.0.0",
+  "description": "Server code for the PetCare app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dist",
+    "build": "tsc",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marraui/PetCare-Server.git"
+  },
+  "author": "Camilo Rosales",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marraui/PetCare-Server/issues"
+  },
+  "homepage": "https://github.com/marraui/PetCare-Server#readme",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "@types/mongodb": "^3.1.28",
+    "@types/node": "^12.6.2",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "http-status-codes": "^1.3.2",
+    "mongodb": "^3.2.7",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.5.3",
+    "typescript-eslint-parser": "^22.0.0"
+  }
+}
