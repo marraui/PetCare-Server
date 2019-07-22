@@ -11,7 +11,9 @@ export class DatabaseManager {
 
     static async connect() {
         console.log('Trying to connect to the database...');
-        DatabaseManager.client = await MongoClient.connect(`${DatabaseManager.url}:${DatabaseManager.port}`);
+        DatabaseManager.client = await MongoClient.connect(`${DatabaseManager.url}:${DatabaseManager.port}`, {
+            useNewUrlParser: true
+        });
         DatabaseManager.db = DatabaseManager.client.db('petcare-db');
         console.log('Connected to database');
     }
@@ -56,5 +58,36 @@ export class DatabaseManager {
         const petCollection: Collection<any> = DatabaseManager.db.collection('pet');
         const petsArray: Pet[] = await petCollection.find({owner: owner}).toArray();
         return petsArray.map((pet: Pet) => new Pet(pet));
+    }
+
+    static async getUsers(): Promise <User[]> {
+        if (DatabaseManager.db == null) {
+            return [];
+        }
+
+        const userCollection: Collection<any> = DatabaseManager.db.collection('user');
+        const userArray: User[] = await userCollection.find().toArray();
+        return userArray.map((user: User) => new User(user));
+    }
+
+    static async getUser(email: string): Promise<User> {
+        if (DatabaseManager.db == null) {
+            return null;
+        }
+
+        const userCollection: Collection<any> = DatabaseManager.db.collection('user');
+        const user: User = await userCollection.findOne({email: email});
+        return user != null ? new User(user) : null;
+    }
+
+    static async getPet(owner: User, name: string): Promise<Pet> {
+        if (DatabaseManager.db == null) {
+            return null;
+        }
+
+        const petCollection: Collection<any> = DatabaseManager.db.collection('pet');
+        const aux = await petCollection.findOne({owner: owner, name: name});
+        const pet: Pet = new Pet(aux);
+        return pet;
     }
 }
