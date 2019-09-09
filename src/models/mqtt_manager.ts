@@ -11,14 +11,13 @@ export class MqttManager {
         // Connecting to mqtt server
         console.log(`MqttManager -> Connecting to mqtt server at: ${MqttManager.url}`);
         this.mqttClient = mqtt.connect(MqttManager.url);
-        this.mqttClient.on('connect', this.onConnect);
-        this.mqttClient.on('message', this.onMessage);
+        this.mqttClient.on('connect', this.onConnect.bind(this));
+        this.mqttClient.on('message', this.onMessage.bind(this));
         this.mqttClient.on('error', () => console.log('MqttManager -> Error'));
     }
 
     onConnect() {
         console.log('MqttManager -> Connected succesfully to mqtt server');
-
         // Subscribe to topic
         DatabaseManager.getUsers().then((users: User[]) => {
             users.forEach((user: User) => {
@@ -26,7 +25,11 @@ export class MqttManager {
                 console.log(`MqttManager -> Subscribing to ${user.email} topic`);
                 this.mqttClient.subscribe(user.email, err => {
                     // On error
-                    console.log(`MqttManager -> Couldn't subscribe to ${user.email}, error: ${err.message}`);
+                    if (err) {
+                        console.log(`MqttManager -> Couldn't subscribe to ${user.email}, error: ${err.message}`);
+                        return;
+                    }
+                    console.log(`MqttManager -> Subscribed successfully`);
                 });
             });
         }).catch(err => {
@@ -52,6 +55,8 @@ export class MqttManager {
                     owner: owner,
                     date: new Date()
                 });
+                console.log(`MqttManager -> Inserting pet into database`);
+                console.log(petInfo);
                 DatabaseManager.insertPetInfo(petInfo);
             }).catch(err => {
                 // Error getting pet
