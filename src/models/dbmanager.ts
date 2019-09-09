@@ -23,7 +23,7 @@ export class DatabaseManager {
             return;
         }
         const petInfoCollection: Collection<any> = DatabaseManager.db.collection('pet_info');
-        petInfoCollection.insert(petInfo);
+        petInfoCollection.insertOne(petInfo);
     }
 
     static async getPetInfo(pet: Pet, beginDate?: Date, endDate?: Date): Promise<PetInfo[]> {
@@ -40,7 +40,11 @@ export class DatabaseManager {
             return;
         }
         const userCollection: Collection<any> = DatabaseManager.db.collection('user');
-        userCollection.update({email: user.email}, user, {upsert: true});
+        userCollection.updateOne({email: user.email}, {$set: {email: user.email}}, {upsert: true}).then(() => {
+            console.log(`DBManager -> User inserted succesfully`);
+        }).catch(err => {
+            console.log(`DBManager -> User couldn't be inserted, error: ${err.message}`);
+        });
     }
 
     static async insertPet(pet: Pet, owner: User) {
@@ -48,7 +52,11 @@ export class DatabaseManager {
             return;
         }
         const petCollection: Collection<any> = DatabaseManager.db.collection('pet');
-        petCollection.insert({...pet, owner: owner});
+        petCollection.insert({...pet, owner: owner}).then(() => {
+            console.log(`DBManager -> Pet inserted successfully`);
+        }).catch(err => {
+            console.log(`DBManager -> Pet couldn't be inserted, error: ${err.message}`);
+        });
     }
 
     static async getPets(owner: User): Promise<Pet[]> {
@@ -86,8 +94,23 @@ export class DatabaseManager {
         }
 
         const petCollection: Collection<any> = DatabaseManager.db.collection('pet');
-        const aux = await petCollection.findOne({owner: owner, name: name});
-        const pet: Pet = new Pet(aux);
+
+        const aux = await petCollection.findOneAndUpdate({
+            owner: owner, name: name
+        },
+        {
+            $setOnInsert: {
+                owner: owner,
+                name: name
+            }
+        },
+        {
+            returnOriginal: false,
+            upsert: true
+        });
+        console.log('pet: ');
+        console.log(aux);
+        const pet: Pet = new Pet(aux.value);
         return pet;
     }
 }
