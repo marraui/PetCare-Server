@@ -8,9 +8,17 @@ import { Pet } from '../models/pet';
 export async function getPets(req: Request, res: Response) {
     console.log('Get Pets -> Getting pets');
     const owner: User = req.body.owner;
-    await DatabaseManager.insertUser(owner);
-    const pets: Pet[] = await DatabaseManager.getPets(owner);
-    console.log('Get Pets -> Response:');
-    console.log(pets);
-    res.status(HttpStatus.OK).json(pets);
+    DatabaseManager.insertUser(owner).then(() => {
+        DatabaseManager.getPets(owner).then((pets: Pet[]) => {
+            console.log('Get Pets -> Response:');
+            console.log(pets);
+            res.status(HttpStatus.OK).json(pets);
+        }).catch(err => {
+            console.log(`Get pets -> Couldn't get pets from owner, error: ${err.message}`);
+            res.send(createError(HttpStatus.INTERNAL_SERVER_ERROR, `Couldn't get pets from owner, err: ${err.message}`));
+        });
+    }).catch(err => {
+        console.log(`Get pets -> Couldn't find nor create user of owner, error: ${err.message}`);
+    });
+    return;
 }

@@ -40,11 +40,7 @@ export class DatabaseManager {
             return;
         }
         const userCollection: Collection<any> = DatabaseManager.db.collection('user');
-        userCollection.updateOne({email: user.email}, {$set: {email: user.email}}, {upsert: true}).then(() => {
-            console.log(`DBManager -> User inserted succesfully`);
-        }).catch(err => {
-            console.log(`DBManager -> User couldn't be inserted, error: ${err.message}`);
-        });
+        await userCollection.updateOne({email: user.email}, {$set: {email: user.email}}, {upsert: true});
     }
 
     static async insertPet(pet: Pet, owner: User) {
