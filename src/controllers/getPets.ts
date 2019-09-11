@@ -7,6 +7,8 @@ import { Pet } from '../models/pet';
 
 export async function getPets(req: Request, res: Response) {
     console.log('Get Pets -> Getting pets');
+    console.log('Get Pets -> Body:');
+    console.log(req);
     const owner: User = req.body.owner;
     DatabaseManager.insertUser(owner).then(() => {
         DatabaseManager.getPets(owner).then((pets: Pet[]) => {
