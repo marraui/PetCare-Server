@@ -9,8 +9,8 @@ import { User } from '../models/user';
 export async function getPetInfo(req: Request, res: Response) {
     const pet: Pet = req.body.pet;
     const owner: User = req.body.owner;
-    const beginDate: Date = req.body.beginDate ? req.body.beginDate : null;
-    const endDate: Date = req.body.endDate ? req.body.endDate : null;
+    const beginDate: number = req.body.beginDate ? req.body.beginDate : null;
+    const endDate: number = req.body.endDate ? req.body.endDate : null;
 
 
     DatabaseManager.getPetInfo(pet, owner, beginDate, endDate).then((petInfo: PetInfo[]) => {

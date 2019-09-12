@@ -26,7 +26,7 @@ export class DatabaseManager {
         petInfoCollection.insertOne(petInfo);
     }
 
-    static async getPetInfo(pet: Pet, owner: User, beginDate?: Date, endDate?: Date): Promise<PetInfo[]> {
+    static async getPetInfo(pet: Pet, owner: User, beginDate?: number, endDate?: number): Promise<PetInfo[]> {
         if (DatabaseManager.db == null) {
             return [];
         }
