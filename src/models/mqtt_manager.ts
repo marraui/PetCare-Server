@@ -59,7 +59,11 @@ export class MqttManager {
                 });
                 console.log(`MqttManager -> Inserting pet into database`);
                 console.log(petInfo);
-                DatabaseManager.insertPetInfo(petInfo);
+                DatabaseManager.insertPetInfo(petInfo).then(() => {
+                    console.log(`MqttManager -> Pet info inserted succesfully`);
+                }).catch(err => {
+                    console.log(`MqttManager -> Couldn't insert pet info, error: ${err.message}`);
+                });
             }).catch(err => {
                 // Error getting pet
                 console.log(`MqttManager -> Couldn't get pet, error: ${err.message}`);
