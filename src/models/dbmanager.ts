@@ -31,7 +31,20 @@ export class DatabaseManager {
             return [];
         }
         const petInfoCollection: Collection<PetInfo> = DatabaseManager.db.collection('pet_info');
-        const petInfoArray: PetInfo[] = await petInfoCollection.find({pet: pet, owner: owner, date: { $gt: beginDate, $lt: endDate }}).toArray();
+        let petInfoArray: PetInfo[];
+        if (beginDate) {
+            if (endDate) {
+                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$gt: beginDate, $lt: endDate }}).toArray();
+            } else {
+                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$gt: beginDate}}).toArray();
+            }
+        } else {
+            if (endDate) {
+                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$lt: endDate }}).toArray();
+            } else {
+                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner}).toArray();
+            }
+        }
         return petInfoArray.map((petInfo: PetInfo) => new PetInfo(petInfo));
     }
 
