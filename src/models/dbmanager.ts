@@ -26,12 +26,12 @@ export class DatabaseManager {
         petInfoCollection.insertOne(petInfo);
     }
 
-    static async getPetInfo(pet: Pet, beginDate?: Date, endDate?: Date): Promise<PetInfo[]> {
+    static async getPetInfo(pet: Pet, owner: User, beginDate?: Date, endDate?: Date): Promise<PetInfo[]> {
         if (DatabaseManager.db == null) {
             return [];
         }
         const petInfoCollection: Collection<PetInfo> = DatabaseManager.db.collection('pet_info');
-        const petInfoArray: PetInfo[] = await petInfoCollection.find({pet: pet, date: { $gt: beginDate, $lt: endDate }}).toArray();
+        const petInfoArray: PetInfo[] = await petInfoCollection.find({pet: pet, owner: owner, date: { $gt: beginDate, $lt: endDate }}).toArray();
         return petInfoArray.map((petInfo: PetInfo) => new PetInfo(petInfo));
     }
 
