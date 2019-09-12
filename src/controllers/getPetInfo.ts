@@ -10,6 +10,11 @@ export async function getPetInfo(req: Request, res: Response) {
     const beginDate: Date = req.body.beginDate;
     const endDate: Date = req.body.endDate;
 
-    const petInfo: PetInfo[] = await DatabaseManager.getPetInfo(pet, beginDate, endDate);
-    res.status(HttpStatus.OK).json(petInfo);
+    DatabaseManager.getPetInfo(pet, beginDate, endDate).then((petInfo: PetInfo[]) => {
+        console.log('Get pet info -> Pet info retrieved succesfully');
+        res.status(HttpStatus.OK).json(petInfo);
+    }).catch(err => {
+        console.log(`Get Pet info -> Couldn't retrieve pet info, error: ${err.message}`);
+        res.send(createError(HttpStatus.INTERNAL_SERVER_ERROR, `Couldn't retrieve pet info`));
+    });
 }
