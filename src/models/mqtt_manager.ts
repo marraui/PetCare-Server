@@ -53,7 +53,7 @@ export class MqttManager {
                 const petInfo: PetInfo = new PetInfo({
                     pet: pet,
                     owner: owner,
-                    date: new Date(),
+                    date: Date.now(),
                     temperature: messageJSON.temperature,
                     heartBeat: messageJSON.heartBeat
                 });
