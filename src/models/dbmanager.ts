@@ -35,15 +35,15 @@ export class DatabaseManager {
         let petInfoArray: PetInfo[];
         if (beginDate) {
             if (endDate) {
-                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$gt: beginDate, $lt: endDate }}).toArray();
+                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$gt: beginDate, $lt: endDate }}).sort('date').toArray();
             } else {
-                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$gt: beginDate}}).toArray();
+                petInfoArray = await petInfoCollection.find({ pet: pet, owner: owner, date: { $gt: beginDate } }).sort('date').toArray();
             }
         } else {
             if (endDate) {
-                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner, date: {$lt: endDate }}).toArray();
+                petInfoArray = await petInfoCollection.find({ pet: pet, owner: owner, date: { $lt: endDate } }).sort('date').toArray();
             } else {
-                petInfoArray = await petInfoCollection.find({pet: pet, owner: owner}).toArray();
+                petInfoArray = await petInfoCollection.find({ pet: pet, owner: owner }).sort('date').toArray();
             }
         }
         return petInfoArray.map((petInfo: PetInfo) => new PetInfo(petInfo));
