@@ -6,13 +6,13 @@ export class PetInfo {
     owner: User;
     date: number;
     temperature: number;
-    heartBeat: number;
+    heartRate: number;
 
     constructor (petInfo: any) {
         this.pet = petInfo && petInfo.pet || new Pet();
         this.owner = petInfo && petInfo.owner || new User();
         this.date = petInfo && petInfo.date || -1;
         this.temperature = petInfo && petInfo.temperature || null;
-        this.heartBeat = petInfo && petInfo.heartBeat || null;
+        this.heartRate = petInfo && petInfo.heartRate || null;
     }
 }

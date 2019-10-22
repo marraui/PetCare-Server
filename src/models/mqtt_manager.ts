@@ -55,7 +55,7 @@ export class MqttManager {
                     owner: owner,
                     date: Date.now(),
                     temperature: messageJSON.temperature,
-                    heartBeat: messageJSON.heartBeat
+                    heartRate: messageJSON.heartRate
                 });
                 console.log(`MqttManager -> Inserting pet into database`);
                 console.log(petInfo);
