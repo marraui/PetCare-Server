@@ -2,6 +2,7 @@ import { MongoClient, Db, Collection } from 'mongodb';
 import { PetInfo } from './pet_info';
 import { Pet } from './pet';
 import { User } from './user';
+import { mqttManager } from './mqtt_manager';
 
 export class DatabaseManager {
     static url = 'mongodb://mongo';
@@ -54,6 +55,7 @@ export class DatabaseManager {
         }
         const userCollection: Collection<any> = DatabaseManager.db.collection('user');
         await userCollection.updateOne({email: user.email}, {$set: {email: user.email}}, {upsert: true});
+        mqttManager.subscribe(user);
     }
 
     static async insertPet(pet: Pet, owner: User) {

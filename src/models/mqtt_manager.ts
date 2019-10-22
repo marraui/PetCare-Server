@@ -7,7 +7,7 @@ export class MqttManager {
     static url = 'mqtt://test.mosquitto.org:1883';
     static port = 1883;
     mqttClient: mqtt.MqttClient;
-    constructor() {
+    connect() {
         // Connecting to mqtt server
         console.log(`MqttManager -> Connecting to mqtt server at: ${MqttManager.url}`);
         this.mqttClient = mqtt.connect(MqttManager.url);
@@ -21,16 +21,7 @@ export class MqttManager {
         // Subscribe to topic
         DatabaseManager.getUsers().then((users: User[]) => {
             users.forEach((user: User) => {
-                // Subscribing to the user's topic
-                console.log(`MqttManager -> Subscribing to ${user.email} topic`);
-                this.mqttClient.subscribe(user.email, err => {
-                    // On error
-                    if (err) {
-                        console.log(`MqttManager -> Couldn't subscribe to ${user.email}, error: ${err.message}`);
-                        return;
-                    }
-                    console.log(`MqttManager -> Subscribed successfully`);
-                });
+                this.subscribe(user);
             });
         }).catch(err => {
             // Error getting users
@@ -73,4 +64,19 @@ export class MqttManager {
             console.log(`MqttManager -> Couldn't get user, error: ${err.message}`);
         });
     }
+
+    subscribe(user: User) {
+        // Subscribing to the user's topic
+        console.log(`MqttManager -> Subscribing to ${user.email} topic`);
+        this.mqttClient.subscribe(user.email, err => {
+            // On error
+            if (err) {
+                console.log(`MqttManager -> Couldn't subscribe to ${user.email}, error: ${err.message}`);
+                return;
+            }
+            console.log(`MqttManager -> Subscribed successfully`);
+        });
+    }
 }
+
+export let mqttManager = new MqttManager();
